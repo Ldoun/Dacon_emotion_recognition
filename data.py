@@ -28,8 +28,10 @@ class AudioDataSet(Dataset):
         else:
             self.y = torch.zeros(self.features.shape[0])
 
+        self.scaler = None
+
     def __len__(self):
         return len(self.features)
     
-    def __getitem__(self, index, scaler):
-        return scaler(self.features[index]), self.y[index]
+    def __getitem__(self, index):
+        return self.scaler(self.features[index]), self.y[index]
