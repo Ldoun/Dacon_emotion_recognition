@@ -1,4 +1,5 @@
 import argparse
+from models import args_for_rnn, args_for_transformer
 
 def args_for_data(parser):
     parser.add_argument('--train', type=str, default='../data/train.csv')
@@ -7,7 +8,6 @@ def args_for_data(parser):
     parser.add_argument('--path', type=str, default='../data')
     parser.add_argument('--result_path', type=str, default='./result')
     
-
 def args_for_audio(parser):
     parser.add_argument('--sr', type=int, default=16000, help='sampling rate')
 
@@ -16,18 +16,23 @@ def args_for_audio(parser):
     parser.add_argument('--win_length', type=int, default=200, help='each frame of audio is windowed by window of length')
     parser.add_argument('--hop_length', type=int, default=160, help='hop length')
     parser.add_argument('--n_mels', type=int, default=128, help='output shape of spectrogram will be (n_mels, ts)')
+
+    #mfcc
     parser.add_argument('--n_mfcc', type=int, default=128, help='n_mfcc')
 
 def args_for_train(parser):
     parser.add_argument('--cv_k', type=int, default=10, help='k-fold stratified cross validation')
     parser.add_argument('--num_workers', type=int, default=6, help='num_workers')
     parser.add_argument('--batch_size', type=int, default=128, help='batch_size')
-    
-    
+    parser.add_argument('--epochs', type=int, default=200, help='max epochs')
+    parser.add_argument('--patience', type=int, default=100, help='patience for early stopping')    
+    parser.add_argument('--lr', type=float, default=1e-3, help='learning rate for the optimizer')    
 
 def args_for_model(parser, model):
-    pass
-
+    if model == 'transformer':
+        args_for_transformer(parser)
+    else:
+        args_for_rnn(parser)
 
 def get_args():
     parser = argparse.ArgumentParser()
