@@ -3,13 +3,16 @@ import logging
 import numpy as np
 import pandas as pd
 from functools import partial
-from torch.utils.data import DataLoader
 from sklearn.model_selection import StratifiedKFold
+
+from torch import optim, nn
+from torch.utils.data import DataLoader
 
 from config import get_args
 from trainer import Trainer
+import models as model
 from utils import seed_everything
-from data import load_audio, AudioDataSet, collate_fn
+from data import load_audio_mfcc, AudioDataSet, collate_fn
 
 if __name__ == "__main__":
     args = get_args()
@@ -27,9 +30,11 @@ if __name__ == "__main__":
     test_data = pd.read_csv(args.test)
     test_data['path'].apply(lambda x: os.path.join(args.path, x))
     
-    process_func = partial(load_audio, 
-            sr=args.sr, n_fft=args.n_fft, win_length=args.win_length, hop_length=args.hop_length, n_mels=args.n_mels)
+    process_func = partial(load_audio_mfcc, 
+            sr=args.sr, n_fft=args.n_fft, win_length=args.win_length, hop_length=args.hop_length, n_mels=args.n_mels, n_mfcc=args.n_mfcc)
     
+    input_size = args.n_mfcc
+    output_size = 6
 
     test_result = []
     skf = StratifiedKFold(n_splits=args.cv_k, random_state=args.seed, shuffle=True)
@@ -56,11 +61,11 @@ if __name__ == "__main__":
             valid_dataset, batch_size=args.batch_size, shuffle=False, num_workers=args.num_workers, collate_fn=collate_fn
         )
 
-        model = None
-        loss_fn = None
-        optimizer = None
+        model = getattr(model, args.model)(args, input_size, output_size)
+        loss_fn = nn.CrossEntropyLoss()
+        optimizer = optim.adam(model.parameters(), lr=args.lr)
 
-        trainer = Trainer(train_loader, valid_loader, model, loss_fn, optimizer, fold_result_path, fold_logger)
+        trainer = Trainer(train_loader, valid_loader, model, loss_fn, optimizer, args.patience, args.epochs, result_path, fold_logger)
         trainer.train()
 
         test_dataset = AudioDataSet(process_func=process_func, file_list=test_data['path'], y=None)
