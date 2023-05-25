@@ -38,7 +38,7 @@ if __name__ == "__main__":
 
     test_result = []
     skf = StratifiedKFold(n_splits=args.cv_k, random_state=args.seed, shuffle=True)
-    for fold, (train_index, valid_index) in enumerate(skf.split(train_data['path'], train_data['y'])):
+    for fold, (train_index, valid_index) in enumerate(skf.split(train_data['path'], train_data['label'])):
         fold_result_path = os.path.join(result_path, f'{fold+1}-fold')
         os.makedirs(fold_result_path)
         fold_logger = logger.getChild()
