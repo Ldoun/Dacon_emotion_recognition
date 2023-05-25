@@ -1,5 +1,5 @@
-from LSTM import LSTM, RNN
-from transformer import Transformer
+from models.LSTM import LSTM, RNN
+from models.transformer import Transformer
 
 def args_for_rnn(parser):
     parser.add_argument('--hidden', type=int, default=256, help='hidden size of the rnn')
