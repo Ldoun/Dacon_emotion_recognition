@@ -41,6 +41,7 @@ def get_args():
 
     args_for_audio(parser)
     args_for_data(parser)
+    args_for_train(parser)
 
     args_, _ = parser.parse_known_args()
     args_for_model(parser, args_.model)
