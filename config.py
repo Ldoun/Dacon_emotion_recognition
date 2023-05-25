@@ -16,6 +16,7 @@ def args_for_audio(parser):
     parser.add_argument('--win_length', type=int, default=200, help='each frame of audio is windowed by window of length')
     parser.add_argument('--hop_length', type=int, default=160, help='hop length')
     parser.add_argument('--n_mels', type=int, default=128, help='output shape of spectrogram will be (n_mels, ts)')
+    parser.add_argument('--n_mfcc', type=int, default=128, help='n_mfcc')
 
 def args_for_train(parser):
     parser.add_argument('--cv_k', type=int, default=10, help='k-fold stratified cross validation')

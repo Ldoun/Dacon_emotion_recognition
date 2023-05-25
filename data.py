@@ -5,11 +5,16 @@ import torch
 from torch.nn.utils.rnn import pad_sequence
 from torch.utils.data import  Dataset
 
-def load_audio(file, sr, n_fft, win_length, hop_length, n_mels):
+def load_audio_mel_spectrogram(file, sr, n_fft, win_length, hop_length, n_mels):
     data, _ = librosa.load(file, sr=sr)
     mel_spectrogram = librosa.feature.melspectrogram(y=data, sr=sr, n_fft=n_fft, win_length=win_length, hop_length=hop_length, n_mels=n_mels)
     power_mel_spectrogram = librosa.power_to_db(mel_spectrogram, ref = np.max)
     return power_mel_spectrogram  
+
+def load_audio_mfcc(file, sr, n_fft, win_length, hop_length, n_mels, n_mfcc):
+    data, _ = librosa.load(file, sr=sr)
+    mfcc = librosa.feature.mfcc(y=data, sr=sr, n_fft=n_fft, win_length=win_length, hop_length=hop_length, n_mels=n_mels, n_mfcc=n_mfcc)
+    return mfcc  
 
 def collate_fn(batch):
     x, y = zip(*batch)
