@@ -18,7 +18,7 @@ if __name__ == "__main__":
     args = get_args()
     seed_everything(args.seed)
 
-    result_path = os.path.join(args.result_path, len(os.listdir(args.result_path)))
+    result_path = os.path.join(args.result_path, str(len(os.listdir(args.result_path))))
     os.makedirs(result_path)
     logging.basicConfig(level=logging.INFO)
     logger = logging.getLogger()
