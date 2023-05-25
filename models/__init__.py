@@ -1,1 +1,2 @@
-from torch.nn import LSTM, RNN, TransformerEncoder
+from LSTM import LSTM, RNN
+from transformer import Transformer
