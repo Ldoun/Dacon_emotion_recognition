@@ -22,7 +22,7 @@ if __name__ == "__main__":
 
     result_path = os.path.join(args.result_path, str(len(os.listdir(args.result_path))))
     os.makedirs(result_path)
-    logging.basicConfig(level=logging.INFO)
+    logging.basicConfig(level=logging.INFO, format='%(message)s')
     logger = logging.getLogger()
     logger.addHandler(logging.StreamHandler())
     logger.addHandler(logging.FileHandler(os.path.join(result_path, 'log.log')))    
@@ -44,6 +44,7 @@ if __name__ == "__main__":
         fold_result_path = os.path.join(result_path, f'{fold+1}-fold')
         os.makedirs(fold_result_path)
         fold_logger = logger.getChild(f'{fold+1}-fold')
+        fold_logger.handlers.clear()
         fold_logger.addHandler(logging.FileHandler(os.path.join(fold_result_path, 'log.log')))    
         fold_logger.info(f'start training of {fold+1}-fold')
 

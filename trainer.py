@@ -21,7 +21,7 @@ class Trainer():
             loss_train, acc_train = self.train_step()
             loss_val, acc_val = self.valid_step()
 
-            self.logger.info(f'Epoch({epoch}) t_loss:{loss_train:.3f} t_acc:{acc_train:2f} v_loss:{loss_val:.3f} v_acc:{acc_val:.2f}')
+            self.logger.info(f'Epoch {epoch}: t_loss:{loss_train:.3f} t_acc:{acc_train:2f} v_loss:{loss_val:.3f} v_acc:{acc_val:.2f}')
 
             if loss_val < best:
                 best = loss_val
@@ -71,7 +71,7 @@ class Trainer():
                 total_loss += loss.item() * x.shape[0] #reduction of criterion -> mean
                 correct +=  sum(output.argmax(dim=1) == y).item()
                 
-        return total_loss/len(self.train_loader), correct/len(self.train_loader)
+        return total_loss/len(self.valid_loader), correct/len(self.valid_loader)
 
     def test(self):
         self.model.load_state_dict(torch.load(self.best_model_path))
