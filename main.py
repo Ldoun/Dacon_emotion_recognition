@@ -24,7 +24,6 @@ if __name__ == "__main__":
     os.makedirs(result_path)
     logging.basicConfig(level=logging.INFO, format='%(message)s')
     logger = logging.getLogger()
-    logger.addHandler(logging.StreamHandler())
     logger.addHandler(logging.FileHandler(os.path.join(result_path, 'log.log')))    
 
     train_data = pd.read_csv(args.train)
