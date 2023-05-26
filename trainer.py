@@ -50,7 +50,7 @@ class Trainer():
             loss = self.loss_fn(output, y)
             loss.backward()
             self.optimizer.step()
-            total_loss += loss.item(0) * x.shape[0] #reduction of criterion -> mean
+            total_loss += loss.item() * x.shape[0] #reduction of criterion -> mean
             correct +=  sum(output.argmax(dim=1) == y).item()
         
         return total_loss/len(self.train_loader), correct/len(self.train_loader)
@@ -66,7 +66,7 @@ class Trainer():
                 output = self.model(x)
                 
                 loss = self.loss_fn(output, y)
-                total_loss += loss.item(0) * x.shape[0] #reduction of criterion -> mean
+                total_loss += loss.item() * x.shape[0] #reduction of criterion -> mean
                 correct +=  sum(output.argmax(dim=1) == y).item()
                 
         return total_loss/len(self.train_loader), correct/len(self.train_loader)
