@@ -63,7 +63,7 @@ if __name__ == "__main__":
             valid_dataset, batch_size=args.batch_size, shuffle=False, num_workers=args.num_workers, collate_fn=collate_fn
         )
 
-        model = getattr(model, args.model)(args, input_size, output_size)
+        model = getattr(model, args.model)(args, input_size, output_size).to(device)
         loss_fn = nn.CrossEntropyLoss()
         optimizer = optim.Adam(model.parameters(), lr=args.lr)
 
