@@ -35,11 +35,7 @@ class Trainer():
 
             if bad_counter == self.patience:
                 break
-        
-        loss_test, acc_test = self.test_step()
-        self.logger.info(f'Test loss:{loss_test:.3f} acc:{acc_test:.2f}')
-        return loss_test, acc_test
-    
+            
     def train_step(self):
         self.model.train()
         self.optimizer.zero_grad()
