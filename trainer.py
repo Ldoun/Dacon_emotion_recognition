@@ -1,5 +1,6 @@
 import os
 import torch
+import numpy as np
 
 class Trainer():
     def __init__(self, train_loader, valid_loader, model, loss_fn, optimizer, device, patience, epochs, result_path, fold_logger):
@@ -15,6 +16,7 @@ class Trainer():
         self.best_model_path = os.path.join(result_path, 'best_model.pt')
     
     def train(self):
+        best = np.inf
         for epoch in range(1,self.epochs+1):
             loss_train, acc_train = self.train_step()
             loss_val, acc_val = self.valid_step()
