@@ -11,7 +11,7 @@ from torch.utils.data import DataLoader
 
 from config import get_args
 from trainer import Trainer
-import models as model
+import models as model_module
 from utils import seed_everything
 from data import load_audio_mfcc, AudioDataSet, collate_fn
 
@@ -63,7 +63,7 @@ if __name__ == "__main__":
             valid_dataset, batch_size=args.batch_size, shuffle=False, num_workers=args.num_workers, collate_fn=collate_fn
         )
 
-        model = getattr(model, args.model)(args, input_size, output_size).to(device)
+        model = getattr(model_module, args.model)(args, input_size, output_size).to(device)
         loss_fn = nn.CrossEntropyLoss()
         optimizer = optim.Adam(model.parameters(), lr=args.lr)
 
