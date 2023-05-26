@@ -26,9 +26,9 @@ if __name__ == "__main__":
     logger.addHandler(logging.FileHandler(os.path.join(result_path, 'log.log')))    
 
     train_data = pd.read_csv(args.train)
-    train_data['path'].apply(lambda x: os.path.join(args.path, x))
+    train_data['path'] = train_data['path'].apply(lambda x: os.path.join(args.path, x))
     test_data = pd.read_csv(args.test)
-    test_data['path'].apply(lambda x: os.path.join(args.path, x))
+    test_data['path'] = test_data['path'].apply(lambda x: os.path.join(args.path, x))
     
     process_func = partial(load_audio_mfcc, 
             sr=args.sr, n_fft=args.n_fft, win_length=args.win_length, hop_length=args.hop_length, n_mels=args.n_mels, n_mfcc=args.n_mfcc)
@@ -41,7 +41,7 @@ if __name__ == "__main__":
     for fold, (train_index, valid_index) in enumerate(skf.split(train_data['path'], train_data['label'])):
         fold_result_path = os.path.join(result_path, f'{fold+1}-fold')
         os.makedirs(fold_result_path)
-        fold_logger = logger.getChild()
+        fold_logger = logger.getChild(f'{fold+1}-fold')
         fold_logger.addHandler(logging.FileHandler(os.path.join(fold_result_path, 'log.log')))    
         fold_logger.info(f'start training of {fold+1}-fold')
 
