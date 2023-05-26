@@ -23,7 +23,7 @@ class Trainer():
             loss_train, acc_train = self.train_step()
             loss_val, acc_val = self.valid_step()
 
-            self.logger.info(f'Epoch {epoch.zfill(5)}: t_loss:{loss_train:.3f} t_acc:{acc_train:.3f} v_loss:{loss_val:.3f} v_acc:{acc_val:.3f}')
+            self.logger.info(f'Epoch {str(epoch).zfill(5)}: t_loss:{loss_train:.3f} t_acc:{acc_train:.3f} v_loss:{loss_val:.3f} v_acc:{acc_val:.3f}')
 
             if loss_val < best:
                 best = loss_val
