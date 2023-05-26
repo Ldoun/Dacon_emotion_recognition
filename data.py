@@ -19,7 +19,7 @@ def load_audio_mfcc(file, sr, n_fft, win_length, hop_length, n_mels, n_mfcc):
 def collate_fn(batch):
     x, y = zip(*batch)
     x = pad_sequence(x, batch_first=True)
-    y = torch.cat(y)
+    y = torch.stack(y)
     return x, y
 
 class AudioDataSet(Dataset):
