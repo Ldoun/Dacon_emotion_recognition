@@ -35,16 +35,17 @@ class Trainer():
 
             if bad_counter == self.patience:
                 break
-            
+
     def train_step(self):
         self.model.train()
-        self.optimizer.zero_grad()
 
         total_loss = 0
         correct = 0
         for batch in self.train_loader:
             x,y = batch
             x, y = x.to(self.device), y.to(self.device)
+            
+            self.optimizer.zero_grad()
             output = self.model(x)
             
             loss = self.loss_fn(output, y)
@@ -71,13 +72,13 @@ class Trainer():
                 
         return total_loss/self.len_valid, correct/self.len_valid
 
-    def test(self):
+    def test(self, test_loader):
         self.model.load_state_dict(torch.load(self.best_model_path))
         self.model.eval()
 
         with torch.no_grad():
             result = []
-            for batch in self.test_loader:
+            for batch in test_loader:
                 x, y = batch
                 x, y = x.to(self.device), y.to(self.device)
                 output = self.model(x)
