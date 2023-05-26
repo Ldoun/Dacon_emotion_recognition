@@ -9,5 +9,5 @@ def args_for_rnn(parser):
 def args_for_transformer(parser):
     parser.add_argument('--drop_p', type=float, default=0.5, help='drop out')
     parser.add_argument('--nhead', type=int, default=8, help='number of the head')
-    parser.add_argument('--dim_ff', type=int, default=1024, help='feed forward network dimension')
+    parser.add_argument('--dim_ff', type=int, default=2048, help='feed forward network dimension')
     parser.add_argument('--n_layers', type=int, default=5, help='encoder layer for transformer')

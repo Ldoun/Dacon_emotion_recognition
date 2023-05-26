@@ -26,7 +26,7 @@ class Transformer(nn.Module):
         self.pos_encoder = PositionalEncoding(input_size, args.drop_p)
         encoder_layer = nn.TransformerEncoderLayer(d_model=input_size, nhead=args.nhead, dim_feedforward=args.dim_ff, dropout=args.drop_p, batch_first=True)
         self.model = nn.TransformerEncoder(encoder_layer=encoder_layer, num_layers=args.n_layers)
-        self.output_layer = nn.Linear(args.dim_ff, output_size)
+        self.output_layer = nn.Linear(input_size, output_size)
 
     def forward(self, audio):
         x = self.pos_encoder(audio)
