@@ -2,12 +2,13 @@ import os
 import torch
 
 class Trainer():
-    def __init__(self, train_loader, valid_loader, model, loss_fn, optimizer, patience, epochs, result_path, fold_logger):
+    def __init__(self, train_loader, valid_loader, model, loss_fn, optimizer, device, patience, epochs, result_path, fold_logger):
         self.train_loader = train_loader
         self.valid_loader = valid_loader
         self.model = model
         self.loss_fn = loss_fn
         self.optimizer = optimizer
+        self.device = device
         self.patience = patience
         self.epochs = epochs
         self.logger = fold_logger

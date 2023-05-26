@@ -5,6 +5,7 @@ import pandas as pd
 from functools import partial
 from sklearn.model_selection import StratifiedKFold
 
+import torch
 from torch import optim, nn
 from torch.utils.data import DataLoader
 
@@ -17,6 +18,7 @@ from data import load_audio_mfcc, AudioDataSet, collate_fn
 if __name__ == "__main__":
     args = get_args()
     seed_everything(args.seed)
+    device = torch.device('cuda:0')
 
     result_path = os.path.join(args.result_path, str(len(os.listdir(args.result_path))))
     os.makedirs(result_path)
@@ -65,7 +67,7 @@ if __name__ == "__main__":
         loss_fn = nn.CrossEntropyLoss()
         optimizer = optim.adam(model.parameters(), lr=args.lr)
 
-        trainer = Trainer(train_loader, valid_loader, model, loss_fn, optimizer, args.patience, args.epochs, result_path, fold_logger)
+        trainer = Trainer(train_loader, valid_loader, model, loss_fn, optimizer, device, args.patience, args.epochs, result_path, fold_logger)
         trainer.train()
 
         test_dataset = AudioDataSet(process_func=process_func, file_list=test_data['path'], y=None)
