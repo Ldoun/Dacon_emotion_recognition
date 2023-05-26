@@ -24,7 +24,8 @@ def collate_fn(batch):
 
 class AudioDataSet(Dataset):
     def __init__(self, process_func, file_list, y=None):
-        self.features = torch.tensor([process_func(file) for file in file_list], dtype=torch.float)
+        features = np.stack([process_func(file) for file in file_list])
+        self.features = torch.tensor(features, dtype=torch.float)
         self.min = self.features.min()
         self.max = self.features.max()
         
