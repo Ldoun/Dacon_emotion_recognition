@@ -29,7 +29,7 @@ def args_for_train(parser):
     parser.add_argument('--lr', type=float, default=1e-3, help='learning rate for the optimizer')    
 
 def args_for_model(parser, model):
-    if model == 'transformer':
+    if model == 'Transformer':
         args_for_transformer(parser)
     else:
         args_for_rnn(parser)
