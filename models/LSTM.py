@@ -20,7 +20,6 @@ class LSTM(nn.Module):
         out = torch.cat([forward_o, backward_o], dim=1)
         return self.linear(out)
         
-        
 class RNN(nn.Module):
     def __init__(self, args, input_size, output_size):
         super().__init__()

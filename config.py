@@ -13,8 +13,8 @@ def args_for_audio(parser):
 
     #mel-spectrogram
     parser.add_argument('--n_fft', type=int, default=2048, help='length of the windowed signal after padding with zeros')
-    parser.add_argument('--win_length', type=int, default=200, help='each frame of audio is windowed by window of length')
-    parser.add_argument('--hop_length', type=int, default=160, help='hop length')
+    parser.add_argument('--win_length', type=int, default=2048, help='each frame of audio is windowed by window of length')
+    parser.add_argument('--hop_length', type=int, default=512, help='hop length')
     parser.add_argument('--n_mels', type=int, default=128, help='output shape of spectrogram will be (n_mels, ts)')
 
     #mfcc
