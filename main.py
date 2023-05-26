@@ -65,7 +65,7 @@ if __name__ == "__main__":
 
         model = getattr(model, args.model)(args, input_size, output_size)
         loss_fn = nn.CrossEntropyLoss()
-        optimizer = optim.adam(model.parameters(), lr=args.lr)
+        optimizer = optim.Adam(model.parameters(), lr=args.lr)
 
         trainer = Trainer(train_loader, valid_loader, model, loss_fn, optimizer, device, args.patience, args.epochs, result_path, fold_logger)
         trainer.train()
