@@ -16,7 +16,7 @@ class PositionalEncoding(nn.Module): #Batch-First Positional Encoding
         self.register_buffer('pe', pe)
 
     def forward(self, x):
-        x = x + self.pe[:x.size(1), :] #will be broadcasted to match the target tensor size
+        x = x + self.pe[:, :x.size(1), :] #will be broadcasted to match the target tensor size
         return self.dropout(x)
 
 
