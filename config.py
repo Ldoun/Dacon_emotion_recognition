@@ -37,7 +37,7 @@ def args_for_model(parser, model):
 def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--seed', default=42, type=int)
-    parser.add_argument('--model', default='', help='name of the model')
+    parser.add_argument('--model', default='', help='name of the model', required=True)
 
     args_for_audio(parser)
     args_for_data(parser)
