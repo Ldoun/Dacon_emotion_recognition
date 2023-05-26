@@ -67,7 +67,7 @@ if __name__ == "__main__":
         loss_fn = nn.CrossEntropyLoss()
         optimizer = optim.Adam(model.parameters(), lr=args.lr)
 
-        trainer = Trainer(train_loader, valid_loader, model, loss_fn, optimizer, device, args.patience, args.epochs, result_path, fold_logger)
+        trainer = Trainer(train_loader, valid_loader, model, loss_fn, optimizer, device, args.patience, args.epochs, result_path, fold_logger, len(train_dataset), len(valid_dataset))
         trainer.train()
 
         test_dataset = AudioDataSet(process_func=process_func, file_list=test_data['path'], y=None)

@@ -3,7 +3,7 @@ import torch
 import numpy as np
 
 class Trainer():
-    def __init__(self, train_loader, valid_loader, model, loss_fn, optimizer, device, patience, epochs, result_path, fold_logger):
+    def __init__(self, train_loader, valid_loader, model, loss_fn, optimizer, device, patience, epochs, result_path, fold_logger, len_train, len_valid):
         self.train_loader = train_loader
         self.valid_loader = valid_loader
         self.model = model
@@ -14,6 +14,8 @@ class Trainer():
         self.epochs = epochs
         self.logger = fold_logger
         self.best_model_path = os.path.join(result_path, 'best_model.pt')
+        self.len_train = len_train
+        self.len_valid = len_valid
     
     def train(self):
         best = np.inf
@@ -53,9 +55,9 @@ class Trainer():
             loss.backward()
             self.optimizer.step()
             total_loss += loss.item() * x.shape[0] #reduction of criterion -> mean
-            correct +=  sum(output.argmax(dim=1) == y).item()
+            correct += sum(output.argmax(dim=1) == y).item()
         
-        return total_loss/len(self.train_loader), correct/len(self.train_loader)
+        return total_loss/self.len_train, correct/self.len_train
     
     def valid_step(self):
         self.model.eval()
@@ -69,9 +71,9 @@ class Trainer():
                 
                 loss = self.loss_fn(output, y)
                 total_loss += loss.item() * x.shape[0] #reduction of criterion -> mean
-                correct +=  sum(output.argmax(dim=1) == y).item()
+                correct += sum(output.argmax(dim=1) == y).item()
                 
-        return total_loss/len(self.valid_loader), correct/len(self.valid_loader)
+        return total_loss/self.len_valid, correct/self.len_valid
 
     def test(self):
         self.model.load_state_dict(torch.load(self.best_model_path))
