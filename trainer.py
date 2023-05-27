@@ -1,6 +1,8 @@
 import os
+import sys
 import torch
 import numpy as np
+from tqdm import tqdm
 
 class Trainer():
     def __init__(self, train_loader, valid_loader, model, loss_fn, optimizer, device, patience, epochs, result_path, fold_logger, len_train, len_valid):
@@ -41,7 +43,7 @@ class Trainer():
 
         total_loss = 0
         correct = 0
-        for batch in self.train_loader:
+        for _, batch in tqdm(self.train_loader, file=sys.stdout):
             x,y = batch
             x, y = x.to(self.device), y.to(self.device)
             
