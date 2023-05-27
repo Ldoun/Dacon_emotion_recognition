@@ -31,9 +31,9 @@ if __name__ == "__main__":
     test_data = pd.read_csv(args.test)
     test_data['path'] = test_data['path'].apply(lambda x: os.path.join(args.path, x))
 
-    if args.model == 'Wav2Vec2':
+    if args.model == 'HuggingFace':
         process_func = partial(load_audio, sr=args.sr)
-        extractor = model_module.Wav2Vec2FeatureExtractor.from_pretrained(args.pretrained_model)
+        extractor = model_module.AutoFeatureExtractor.from_pretrained(args.pretrained_model)
         extractor = partial(extractor, sampling_rate=args.sr, return_tensors='np') #for Compatibility: var name-> scaler, return_tensors -> np
         scaler = lambda x: extractor(x).input_values.squeeze(0)
     else:

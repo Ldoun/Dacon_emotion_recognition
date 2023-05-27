@@ -1,5 +1,5 @@
 import argparse
-from models import args_for_rnn, args_for_transformer, args_for_Wav2Vec2
+from models import args_for_rnn, args_for_transformer, args_for_HuggingFace
 
 def args_for_data(parser):
     parser.add_argument('--train', type=str, default='../data/train.csv')
@@ -31,8 +31,8 @@ def args_for_train(parser):
 def args_for_model(parser, model):
     if model == "Transformer":
         args_for_transformer(parser)
-    elif model == "Wav2Vec2":
-        args_for_Wav2Vec2(parser)
+    elif model == "HuggingFace":
+        args_for_HuggingFace(parser)
     else:
         args_for_rnn(parser)
     
