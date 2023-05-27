@@ -1,5 +1,6 @@
 from models.LSTM import LSTM, RNN
 from models.transformer import Transformer
+from models.pretrained_model import Wav2Vec2, Wav2Vec2FeatureExtractor
 
 def args_for_rnn(parser):
     parser.add_argument('--hidden', type=int, default=256, help='hidden size of the rnn')
@@ -11,3 +12,7 @@ def args_for_transformer(parser):
     parser.add_argument('--nhead', type=int, default=8, help='number of the head')
     parser.add_argument('--dim_ff', type=int, default=2048, help='feed forward network dimension')
     parser.add_argument('--n_layers', type=int, default=5, help='encoder layer for transformer')
+
+def args_for_Wav2Vec2(parser):
+    parser.add_argument('--pretrained_model', type=str, default="facebook/wav2vec2-base", help="pretrained model name")
+    

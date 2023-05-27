@@ -13,7 +13,7 @@ from config import get_args
 from trainer import Trainer
 import models as model_module
 from utils import seed_everything
-from data import load_audio_mfcc, AudioDataSet, collate_fn
+from data import load_audio_mfcc, AudioDataSet, collate_fn, load_audio
 
 if __name__ == "__main__":
     args = get_args()
@@ -30,8 +30,13 @@ if __name__ == "__main__":
     train_data['path'] = train_data['path'].apply(lambda x: os.path.join(args.path, x))
     test_data = pd.read_csv(args.test)
     test_data['path'] = test_data['path'].apply(lambda x: os.path.join(args.path, x))
-    
-    process_func = partial(load_audio_mfcc, 
+
+    if args.model == 'Wav2Vec2':
+        process_func = partial(load_audio, sr=args.sr)
+        scaler = model_module.Wav2Vec2FeatureExtractor.from_pretrained(args.pretrained_model)
+        scaler = partial(scaler, sampling_rate=args.sr, return_tensors='np') #for Compatibility: var name-> scaler, return_tensors -> np
+    else:
+        process_func = partial(load_audio_mfcc, 
             sr=args.sr, n_fft=args.n_fft, win_length=args.win_length, hop_length=args.hop_length, n_mels=args.n_mels, n_mfcc=args.n_mfcc)
     
     input_size = args.n_mfcc
@@ -52,7 +57,8 @@ if __name__ == "__main__":
 
         train_dataset = AudioDataSet(process_func=process_func, file_list=kfold_train_data['path'], y=kfold_train_data['label'])
         valid_dataset = AudioDataSet(process_func=process_func, file_list=kfold_valid_data['path'], y=kfold_valid_data['label'])
-        scaler = lambda x:(x-train_dataset.min)/(train_dataset.max-train_dataset.min)
+        if scaler is None:
+            scaler = lambda x:(x-train_dataset.min)/(train_dataset.max-train_dataset.min)
         train_dataset.scaler = scaler
         valid_dataset.scaler = scaler
 
@@ -63,7 +69,7 @@ if __name__ == "__main__":
             valid_dataset, batch_size=args.batch_size, shuffle=False, num_workers=args.num_workers, collate_fn=collate_fn
         )
 
-        model = getattr(model_module, args.model)(args, input_size, output_size).to(device)
+        model = getattr(model_module , args.model)(args, input_size, output_size).to(device)
         loss_fn = nn.CrossEntropyLoss()
         optimizer = optim.Adam(model.parameters(), lr=args.lr)
 

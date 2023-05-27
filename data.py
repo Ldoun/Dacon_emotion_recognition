@@ -16,6 +16,10 @@ def load_audio_mfcc(file, sr, n_fft, win_length, hop_length, n_mels, n_mfcc):
     mfcc = librosa.feature.mfcc(y=data, sr=sr, n_fft=n_fft, win_length=win_length, hop_length=hop_length, n_mels=n_mels, n_mfcc=n_mfcc)
     return mfcc.T
 
+def load_audio(file, sr):
+    data, _ = librosa.load(file, sr=sr)
+    return data
+
 def collate_fn(batch):
     x, y = zip(*batch)
     x = pad_sequence(x, batch_first=True)

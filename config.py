@@ -1,5 +1,5 @@
 import argparse
-from models import args_for_rnn, args_for_transformer
+from models import args_for_rnn, args_for_transformer, args_for_Wav2Vec2
 
 def args_for_data(parser):
     parser.add_argument('--train', type=str, default='../data/train.csv')
@@ -29,11 +29,13 @@ def args_for_train(parser):
     parser.add_argument('--lr', type=float, default=1e-3, help='learning rate for the optimizer')    
 
 def args_for_model(parser, model):
-    if model == 'Transformer':
+    if model == "Transformer":
         args_for_transformer(parser)
+    elif model == "Wav2Vec2":
+        args_for_Wav2Vec2(parser)
     else:
         args_for_rnn(parser)
-
+    
 def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--seed', default=42, type=int)
