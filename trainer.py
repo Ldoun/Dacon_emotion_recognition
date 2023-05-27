@@ -43,7 +43,7 @@ class Trainer():
 
         total_loss = 0
         correct = 0
-        for _, batch in tqdm(self.train_loader, file=sys.stdout):
+        for batch in tqdm(self.train_loader, file=sys.stdout):
             x,y = batch
             x, y = x.to(self.device), y.to(self.device)
             
