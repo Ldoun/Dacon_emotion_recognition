@@ -33,8 +33,9 @@ if __name__ == "__main__":
 
     if args.model == 'Wav2Vec2':
         process_func = partial(load_audio, sr=args.sr)
-        scaler = model_module.Wav2Vec2FeatureExtractor.from_pretrained(args.pretrained_model)
-        scaler = partial(scaler, sampling_rate=args.sr, return_tensors='np') #for Compatibility: var name-> scaler, return_tensors -> np
+        extractor = model_module.Wav2Vec2FeatureExtractor.from_pretrained(args.pretrained_model)
+        extractor = partial(extractor, sampling_rate=args.sr, return_tensors='np') #for Compatibility: var name-> scaler, return_tensors -> np
+        scaler = lambda x: extractor(x).input_values
     else:
         process_func = partial(load_audio_mfcc, 
             sr=args.sr, n_fft=args.n_fft, win_length=args.win_length, hop_length=args.hop_length, n_mels=args.n_mels, n_mfcc=args.n_mfcc)
