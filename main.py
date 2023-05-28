@@ -39,6 +39,7 @@ if __name__ == "__main__":
     else:
         process_func = partial(load_audio_mfcc, 
             sr=args.sr, n_fft=args.n_fft, win_length=args.win_length, hop_length=args.hop_length, n_mels=args.n_mels, n_mfcc=args.n_mfcc)
+        scaler = None
     
     input_size = args.n_mfcc
     output_size = 6
