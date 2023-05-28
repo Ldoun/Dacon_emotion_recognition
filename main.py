@@ -45,6 +45,9 @@ if __name__ == "__main__":
 
     test_result = []
     skf = StratifiedKFold(n_splits=args.cv_k, random_state=args.seed, shuffle=True)
+    prediction = pd.read_csv(args.submission)
+    stackking_input = pd.DataFrame(columns = [f'{i}' for i in range(0, output_size)], index=range(len(train_data)))
+    
     for fold, (train_index, valid_index) in enumerate(skf.split(train_data['path'], train_data['label'])):
         fold_result_path = os.path.join(result_path, f'{fold+1}-fold')
         os.makedirs(fold_result_path)
@@ -74,7 +77,7 @@ if __name__ == "__main__":
         loss_fn = nn.CrossEntropyLoss()
         optimizer = optim.Adam(model.parameters(), lr=args.lr)
 
-        trainer = Trainer(train_loader, valid_loader, model, loss_fn, optimizer, device, args.patience, args.epochs, result_path, fold_logger, len(train_dataset), len(valid_dataset))
+        trainer = Trainer(train_loader, valid_loader, model, loss_fn, optimizer, device, args.patience, args.epochs, fold_result_path, fold_logger, len(train_dataset), len(valid_dataset))
         trainer.train()
 
         test_dataset = AudioDataSet(process_func=process_func, file_list=test_data['path'], y=None)
@@ -83,8 +86,12 @@ if __name__ == "__main__":
             test_dataset, batch_size=args.batch_size, shuffle=False, num_workers=args.num_workers, collate_fn=collate_fn
         )
         test_result.append(trainer.test(test_loader))
+        test_result = np.sum(test_result, axis=0)
+        prediction['sum'] = np.argmax(test_result, axis=-1)
+        prediction.to_csv(os.path.join(result_path, 'sum.csv'), index=False)
+        
+        stackking_input.iloc[valid_index][[f'{i}' for i in range(0, output_size)]] = trainer.test(valid_loader)
+        stackking_input.to_csv(os.path.join(result_path, f'for_stacking_input.csv', index=False))
 
-    test_result = np.sum(test_result, axis=0)
-    prediction = pd.read_csv(args.submission)
-    prediction['label'] = np.argmax(test_result, axis=-1)
-    prediction.to_csv(os.path.join(result_path, 'prediction.csv'), index=False)
+prediction['label'] = np.argmax(test_result, axis=-1)
+prediction.drop(columns=['sum']).to_csv(os.path.join(result_path, 'prediction.csv'), index=False)
