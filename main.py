@@ -20,7 +20,7 @@ if __name__ == "__main__":
     seed_everything(args.seed)
     device = torch.device('cuda:0')
 
-    result_path = os.path.join(args.result_path, str(len(os.listdir(args.result_path))))
+    result_path = os.path.join(args.result_path, args.model+'_'+str(len(os.listdir(args.result_path))))
     os.makedirs(result_path)
     logging.basicConfig(level=logging.INFO, format='%(message)s')
     logger = logging.getLogger()
