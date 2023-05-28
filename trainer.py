@@ -83,7 +83,7 @@ class Trainer():
             for batch in test_loader:
                 x, y = batch
                 x, y = x.to(self.device), y.to(self.device)
-                output = self.model(x)
+                output = torch.softmax(self.model(x), dim=1)
 
                 result.append(output)
 
