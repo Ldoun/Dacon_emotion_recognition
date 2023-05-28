@@ -92,7 +92,7 @@ if __name__ == "__main__":
         prediction.to_csv(os.path.join(result_path, 'sum.csv'), index=False)
         
         stackking_input.iloc[valid_index][[f'{i}' for i in range(0, output_size)]] = trainer.test(valid_loader)
-        stackking_input.to_csv(os.path.join(result_path, f'for_stacking_input.csv', index=False))
+        stackking_input.to_csv(os.path.join(result_path, f'for_stacking_input.csv'), index=False)
 
 prediction['label'] = np.argmax(test_result, axis=-1)
 prediction.drop(columns=['sum']).to_csv(os.path.join(result_path, 'prediction.csv'), index=False)
