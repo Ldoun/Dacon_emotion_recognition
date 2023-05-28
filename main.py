@@ -47,7 +47,8 @@ if __name__ == "__main__":
     test_result = np.zeros([len(test_data), output_size])
     skf = StratifiedKFold(n_splits=args.cv_k, random_state=args.seed, shuffle=True)
     prediction = pd.read_csv(args.submission)
-    stackking_input = pd.DataFrame(columns = [f'{i}' for i in range(0, output_size)], index=range(len(train_data)))
+    output_index = [f'{i}' for i in range(0, output_size)]
+    stackking_input = pd.DataFrame(columns = output_index, index=range(len(train_data)))
     
     for fold, (train_index, valid_index) in enumerate(skf.split(train_data['path'], train_data['label'])):
         fold_result_path = os.path.join(result_path, f'{fold+1}-fold')
@@ -87,11 +88,11 @@ if __name__ == "__main__":
             test_dataset, batch_size=args.batch_size, shuffle=False, num_workers=args.num_workers, collate_fn=collate_fn
         )
         test_result += trainer.test(test_loader)
-        prediction[[f'{i}' for i in range(0, output_size)]] = test_result
+        prediction[output_index] = test_result
         prediction.to_csv(os.path.join(result_path, 'sum.csv'), index=False)
         
-        stackking_input.loc[valid_index][[f'{i}' for i in range(0, output_size)]] = trainer.test(valid_loader)
+        stackking_input.loc[valid_index, output_index] = trainer.test(valid_loader)
         stackking_input.to_csv(os.path.join(result_path, f'for_stacking_input.csv'), index=False)
 
 prediction['label'] = np.argmax(test_result, axis=-1)
-prediction.drop(columns=['sum']).to_csv(os.path.join(result_path, 'prediction.csv'), index=False)
+prediction.drop(columns=output_index).to_csv(os.path.join(result_path, 'prediction.csv'), index=False)
