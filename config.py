@@ -49,5 +49,4 @@ def get_args():
     args_for_model(parser, args_.model)
 
     args = parser.parse_args()
-    print(args)
     return args

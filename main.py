@@ -25,6 +25,7 @@ if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO, format='%(message)s')
     logger = logging.getLogger()
     logger.addHandler(logging.FileHandler(os.path.join(result_path, 'log.log')))    
+    logger.info(args)
 
     train_data = pd.read_csv(args.train)
     train_data['path'] = train_data['path'].apply(lambda x: os.path.join(args.path, x))
