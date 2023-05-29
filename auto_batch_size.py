@@ -16,7 +16,7 @@ def train_step(device, loader, model, loss_fn):
 def max_gpu_batch_size(device, loader_class, logger, model, loss_fn, max_batch_size=1024):
     #device_max_mem = torch.cuda.get_device_properties(device.index).total_memory
     def test_run(bs):
-        logger.debug(f"Trying a run with batch size {bs}")
+        logger.info(f"Trying a run with batch size {bs}")
         with tempfile.TemporaryDirectory() as temp_dir:
             torch.cuda.empty_cache()
             torch.cuda.reset_peak_memory_stats(device)
@@ -25,7 +25,7 @@ def max_gpu_batch_size(device, loader_class, logger, model, loss_fn, max_batch_s
                 train_step(device, loader, model, loss_fn)
             except RuntimeError as e:
                 if "CUDA out of memory" in str(e):
-                    logger.debug("Exceeded memory capacity")
+                    logger.info("Exceeded memory capacity")
                     return None
                 else:
                     raise e
@@ -42,7 +42,7 @@ def max_gpu_batch_size(device, loader_class, logger, model, loss_fn, max_batch_s
         # equal the usage for the previous test run
         min_batch_size = batch_size
     if batch_size is not None:
-        logger.warning(
+        logger.info(
             f"Ran out of examples without finding a match batch size (max tried: {max_size})"
             ", you probably want to try with more examples"
         )
