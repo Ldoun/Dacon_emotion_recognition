@@ -46,6 +46,6 @@ def max_gpu_batch_size(device, loader_class, logger, model, loss_fn, max_batch_s
             f"Ran out of examples without finding a match batch size (max tried: {max_size})"
             ", you probably want to try with more examples"
         )
-    logger.info(f"using {min_batch_size / 2} for batch_size")
+    logger.info(f"using {min_batch_size // 2} for batch_size")
 
-    return min_batch_size/2
+    return min_batch_size // 2
