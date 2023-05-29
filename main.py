@@ -79,6 +79,8 @@ if __name__ == "__main__":
             loader_class = partial(DataLoader, dataset=train_dataset, shuffle=False, num_workers=args.num_workers, collate_fn=collate_fn)
             args.batch_size = max_gpu_batch_size(device, loader_class, logger, model, loss_fn)
             del loader_class
+            model = getattr(model_module , args.model)(args, input_size, output_size).to(device)
+            optimizer = optim.Adam(model.parameters(), lr=args.lr)
 
         train_loader = DataLoader(
             train_dataset, batch_size=args.batch_size, shuffle=True, num_workers=args.num_workers, collate_fn=collate_fn

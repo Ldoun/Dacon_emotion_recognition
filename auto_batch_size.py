@@ -14,14 +14,13 @@ def train_step(device, loader, model, loss_fn):
 
 
 def max_gpu_batch_size(device, loader_class, logger, model, loss_fn, max_batch_size=1024):
-    device_max_mem = torch.cuda.get_device_properties(device.index).total_memory
-
-    def test_run(batch_size):
-        logger.debug(f"Trying a run with batch size {batch_size}")
+    #device_max_mem = torch.cuda.get_device_properties(device.index).total_memory
+    def test_run(bs):
+        logger.debug(f"Trying a run with batch size {bs}")
         with tempfile.TemporaryDirectory() as temp_dir:
             torch.cuda.empty_cache()
             torch.cuda.reset_peak_memory_stats(device)
-            loader = loader_class(batch_size=batch_size)
+            loader = loader_class(batch_size=bs)
             try:
                 train_step(device, loader, model, loss_fn)
             except RuntimeError as e:
@@ -30,24 +29,22 @@ def max_gpu_batch_size(device, loader_class, logger, model, loss_fn, max_batch_s
                     return None
                 else:
                     raise e
-        usage = torch.cuda.max_memory_allocated(device)
-        logger.debug(f"Registered usage: {usage} / {device_max_mem} B")
-        return usage
+        return bs
 
-    usage_with_min_size = 0
+    min_batch_size = 0
     # Find a majoration of max batch size as a power of two
     for exponent in range(math.floor(math.log2(max_batch_size)) + 1):
         max_size = 2 ** exponent
-        usage_with_max_size = test_run(max_size)
-        if usage_with_max_size is None:
+        batch_size = test_run(max_size)
+        if batch_size is None:
             break
         # This will only change as long as we don't break out, at which point it will
         # equal the usage for the previous test run
-        usage_with_min_size = usage_with_max_size
-    if usage_with_max_size is not None:
+        min_batch_size = batch_size
+    if batch_size is not None:
         logger.warning(
             f"Ran out of examples without finding a match batch size (max tried: {max_size})"
             ", you probably want to try with more examples"
         )
 
-    return usage_with_min_size
+    return min_batch_size
