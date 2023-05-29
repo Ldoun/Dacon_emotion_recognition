@@ -13,8 +13,7 @@ def train_step(device, loader, model, loss_fn):
     loss.backward()
 
 
-def max_gpu_batch_size(loader_class, logger, model, loss_fn, max_batch_size=1024):
-    device = torch.device(device)  # type: ignore
+def max_gpu_batch_size(device, loader_class, logger, model, loss_fn, max_batch_size=1024):
     device_max_mem = torch.cuda.get_device_properties(device.index).total_memory
 
     def test_run(batch_size):

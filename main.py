@@ -77,9 +77,9 @@ if __name__ == "__main__":
 
         if args.batch_size == None:
             loader_class = partial(DataLoader, dataset=train_dataset, shuffle=False, num_workers=args.num_workers, collate_fn=collate_fn)
-            args.batch_size = max_gpu_batch_size(loader_class, logger, model, loss_fn)
+            args.batch_size = max_gpu_batch_size(device, loader_class, logger, model, loss_fn)
             del loader_class
-            
+
         train_loader = DataLoader(
             train_dataset, batch_size=args.batch_size, shuffle=True, num_workers=args.num_workers, collate_fn=collate_fn
         )
