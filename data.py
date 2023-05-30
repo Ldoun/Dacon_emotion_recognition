@@ -33,7 +33,7 @@ class AudioDataSet(Dataset):
         self.max = max([features.max() for features in self.features])
         audio_length = [len(feature) for feature in self.features]
         max_index = audio_length.index(max(audio_length))
-        self.max_length_file = file_list[max_index]
+        self.max_length_file = file_list.iloc[max_index]
         
         if y is not None:
             self.y = torch.tensor(y.values, dtype=torch.long)

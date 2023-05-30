@@ -2,11 +2,11 @@ import math
 import torch
 import tempfile
 
-def train_step(device, bs, max_length_file,  processor, model, loss_fn):
+def train_step(device, max_length_file, bs, processor, model, loss_fn):
     model.train()
     x = [max_length_file] * bs
     x = torch.tensor([processor(x_t) for x_t in x], dtype=torch.float)
-    x, y = x.to(device), torch.zeros(bs).to(device)
+    x, y = x.to(device), torch.zeros(bs, dtype=torch.long).to(device)
     
     output = model(x)
     
