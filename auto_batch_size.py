@@ -2,11 +2,11 @@ import math
 import torch
 import tempfile
 
-def train_step(device, size, processor, model, loss_fn):
+def train_step(device, bs, max_length_file,  processor, model, loss_fn):
     model.train()
-    x = torch.randn(size)
+    x = [max_length_file] * bs
     x = torch.tensor([processor(x_t) for x_t in x], dtype=torch.float)
-    x, y = x.to(device), torch.zeros(size[0]).to(device)
+    x, y = x.to(device), torch.zeros(bs).to(device)
     
     output = model(x)
     
@@ -14,7 +14,7 @@ def train_step(device, size, processor, model, loss_fn):
     loss.backward()
 
 
-def max_gpu_batch_size(device, processor, logger, model, loss_fn, max_len, max_batch_size=1024):
+def max_gpu_batch_size(device, processor, logger, model, loss_fn, max_length_file, max_batch_size=1024):
     #device_max_mem = torch.cuda.get_device_properties(device.index).total_memory
     def test_run(bs):
         logger.info(f"Trying a run with batch size {bs}")
@@ -22,7 +22,7 @@ def max_gpu_batch_size(device, processor, logger, model, loss_fn, max_len, max_b
             torch.cuda.empty_cache()
             torch.cuda.reset_peak_memory_stats(device)
             try:
-                train_step(device, (bs, max_len), processor, model, loss_fn)
+                train_step(device, max_length_file, bs, processor, model, loss_fn)
             except RuntimeError as e:
                 if "CUDA out of memory" in str(e):
                     logger.info("Exceeded memory capacity")

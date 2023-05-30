@@ -76,7 +76,7 @@ if __name__ == "__main__":
         optimizer = optim.Adam(model.parameters(), lr=args.lr)
 
         if args.batch_size == None:
-            args.batch_size = max_gpu_batch_size(device, process_func, logger, model, loss_fn, train_data.max_len)
+            args.batch_size = max_gpu_batch_size(device, process_func, logger, model, loss_fn, train_dataset.max_length_file)
             model = getattr(model_module , args.model)(args, input_size, output_size).to(device)
             optimizer = optim.Adam(model.parameters(), lr=args.lr)
 
