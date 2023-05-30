@@ -80,8 +80,6 @@ if __name__ == "__main__":
             model = getattr(model_module , args.model)(args, input_size, output_size).to(device)
             optimizer = optim.Adam(model.parameters(), lr=args.lr)
 
-        model = torch.compile(model)
-
         train_loader = DataLoader(
             train_dataset, batch_size=args.batch_size, shuffle=True, num_workers=args.num_workers, collate_fn=collate_fn
         )
