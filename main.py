@@ -21,11 +21,12 @@ if __name__ == "__main__":
     seed_everything(args.seed)
     device = torch.device('cuda:0')
 
-    result_path = os.path.join(args.result_path, args.model+'_'+str(len(os.listdir(args.result_path))))
     if args.continue_train > 0:
         result_path = args.continue_from_folder
-
-    os.makedirs(result_path)
+    else:
+        result_path = os.path.join(args.result_path, args.model+'_'+str(len(os.listdir(args.result_path))))
+        os.makedirs(result_path)
+    
     logging.basicConfig(level=logging.INFO, format='%(message)s')
     logger = logging.getLogger()
     logger.addHandler(logging.FileHandler(os.path.join(result_path, 'log.log')))    
