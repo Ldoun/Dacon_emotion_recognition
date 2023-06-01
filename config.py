@@ -25,7 +25,10 @@ def args_for_train(parser):
     parser.add_argument('--batch_size', type=int, default=None, help='batch_size')
     parser.add_argument('--epochs', type=int, default=10000, help='max epochs')
     parser.add_argument('--patience', type=int, default=15, help='patience for early stopping')    
-    parser.add_argument('--lr', type=float, default=1e-3, help='learning rate for the optimizer')    
+    parser.add_argument('--lr', type=float, default=1e-3, help='learning rate for the optimizer')   
+
+    parser.add_argument('--continue_train', type=int, default=-1, help='continue training from fold x') 
+    parser.add_argument('--continue_from_folder', type=str, help='continue training from args.continue_from')
 
 def args_for_model(parser, model):
     if model == "HuggingFace":
