@@ -11,23 +11,18 @@ from sklearn.preprocessing import MinMaxScaler
 
 
 from data import load_audio_mfcc
-from config import args_for_audio
+from config import args_for_audio, args_for_data
 
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--name", default= None)
-
-parser.add_argument("--train_csv", required=True)
-parser.add_argument("--test_csv", required=True)
-parser.add_argument("--submission", required=True)
-parser.add_argument("--path", required=True)
-
 parser.add_argument("--target_col", required=True)
 
 parser.add_argument("--seed", type=int, default=72)
 parser.add_argument("--eval_metric", default='accuracy')
 
 args_for_audio(parser)
+args_for_data(parser)
 
 args = parser.parse_args()
 
@@ -35,9 +30,9 @@ process_func = partial(load_audio_mfcc,
             sr=args.sr, n_fft=args.n_fft, win_length=args.win_length, hop_length=args.hop_length, n_mels=args.n_mels, n_mfcc=args.n_mfcc)
 process_func = lambda x: np.mean(x.T, axis=1)
 
-train_data = pd.read_csv(args.train_csv)
+train_data = pd.read_csv(args.train)
 train_data['path'] = train_data['path'].apply(lambda x: os.path.join(args.path, x))
-test_data = pd.read_csv(args.test_csv)
+test_data = pd.read_csv(args.test)
 test_data['path'] = test_data['path'].apply(lambda x: os.path.join(args.path, x))
 
 train_features = [process_func(file) for file in train_data['path']]
@@ -58,4 +53,4 @@ automl.fit(train_mfcc_df, train_y)
 pred = automl.predict(test_mfcc_df)
 submission = pd.read_csv(args.submission)
 submission[args.target_col] = pred
-submission.to_csv(f"{automl.results_path}/submission.csv", index=False)
+submission.to_csv(f"{args.result_path}/{args.name}_submission.csv", index=False)
