@@ -28,7 +28,7 @@ args = parser.parse_args()
 
 process_func = partial(load_audio_mfcc, 
             sr=args.sr, n_fft=args.n_fft, win_length=args.win_length, hop_length=args.hop_length, n_mels=args.n_mels, n_mfcc=args.n_mfcc)
-process_func = lambda x: np.mean(x.T, axis=1)
+process_func = lambda x: np.mean(process_func(x).T, axis=1)
 
 train_data = pd.read_csv(args.train)
 train_data['path'] = train_data['path'].apply(lambda x: os.path.join(args.path, x))
