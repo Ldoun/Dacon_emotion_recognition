@@ -20,6 +20,7 @@ parser.add_argument("--name", default= None)
 parser.add_argument("--train_csv", required=True)
 parser.add_argument("--test_csv", required=True)
 parser.add_argument("--submission", required=True)
+parser.add_argument("--path", required=True)
 
 parser.add_argument("--target_col", required=True)
 
@@ -35,7 +36,9 @@ process_func = partial(load_audio_mfcc,
 process_func = lambda x: np.mean(x.T, axis=1)
 
 train_data = pd.read_csv(args.train_csv)
+train_data['path'] = train_data['path'].apply(lambda x: os.path.join(args.path, x))
 test_data = pd.read_csv(args.test_csv)
+test_data['path'] = test_data['path'].apply(lambda x: os.path.join(args.path, x))
 
 train_features = [process_func(file) for file in train_data['path']]
 test_features = [process_func(file) for file in test_data['path']]
