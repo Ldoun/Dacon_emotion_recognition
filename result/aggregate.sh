@@ -14,3 +14,4 @@ done
 total_loss=$(($total_loss/10))
 total_acc=$(($total_acc/10))
 echo "total loss: ${total_loss} total_acc: ${total_acc}" >> $1/all.log
+cat $1/all.log
