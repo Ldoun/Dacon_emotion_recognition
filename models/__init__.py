@@ -15,4 +15,3 @@ def args_for_transformer(parser):
 
 def args_for_HuggingFace(parser):
     parser.add_argument('--pretrained_model', type=str, default="facebook/wav2vec2-base", help="pretrained model name")
-    

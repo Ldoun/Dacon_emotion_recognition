@@ -1,11 +1,13 @@
+#Compute maximum Batch Size iteratively
+
 import math
 import torch
 import tempfile
 
-def train_step(device, max_length_file, bs, processor, model, loss_fn):
+def train_step(device, max_length_file, bs, processor, model, loss_fn): #test if current batch size occur cuda oom
     model.train()
     x = [max_length_file] * bs
-    x = torch.tensor([processor(x_t) for x_t in x], dtype=torch.float)
+    x = torch.tensor([processor(x_t) for x_t in x], dtype=torch.float) #this will make n tensor from max length file of train set
     x, y = x.to(device), torch.zeros(bs, dtype=torch.long).to(device)
     
     output = model(x)
@@ -13,9 +15,7 @@ def train_step(device, max_length_file, bs, processor, model, loss_fn):
     loss = loss_fn(output, y)
     loss.backward()
 
-
-def max_gpu_batch_size(device, processor, logger, model, loss_fn, max_length_file, max_batch_size=1024):
-    #device_max_mem = torch.cuda.get_device_properties(device.index).total_memory
+def max_gpu_batch_size(device, processor, logger, model, loss_fn, max_length_file, max_batch_size=1024): #based on https://github.com/Lightning-AI/lightning/issues/1615#issuecomment-619940827
     def test_run(bs):
         logger.info(f"Trying a run with batch size {bs}")
         with tempfile.TemporaryDirectory() as temp_dir:

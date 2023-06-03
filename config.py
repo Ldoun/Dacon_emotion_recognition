@@ -30,7 +30,7 @@ def args_for_train(parser):
     parser.add_argument('--continue_train', type=int, default=-1, help='continue training from fold x') 
     parser.add_argument('--continue_from_folder', type=str, help='continue training from args.continue_from')
 
-def args_for_model(parser, model):
+def args_for_model(parser, model): #parse args differently per model
     if model == "HuggingFace":
         args_for_HuggingFace(parser)
     else:
@@ -39,7 +39,7 @@ def args_for_model(parser, model):
             args_for_transformer(parser)
         else:
             args_for_rnn(parser)
-    
+
 def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--seed', default=42, type=int)

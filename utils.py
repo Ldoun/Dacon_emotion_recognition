@@ -3,7 +3,7 @@ import torch
 import random
 import numpy as np
 
-def seed_everything(seed: int):
+def seed_everything(seed: int): #for deterministic result; currently wav2vec2 model and deterninistic algorithm is incompatible
     random.seed(seed)
     os.environ['PYTHONHASHSEED'] = str(seed)
     np.random.seed(seed)

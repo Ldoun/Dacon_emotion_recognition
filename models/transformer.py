@@ -2,7 +2,7 @@ import math
 import torch
 import torch.nn as nn
 
-class PositionalEncoding(nn.Module): #Batch-First Positional Encoding
+class PositionalEncoding(nn.Module): #Custom Batch-First Positional Encoding modified based on https://pytorch.org/tutorials/beginner/transformer_tutorial.html
     def __init__(self, d_model, dropout=0.1, max_len=5000):
         super(PositionalEncoding, self).__init__()
         self.dropout = nn.Dropout(p=dropout)
@@ -23,7 +23,7 @@ class PositionalEncoding(nn.Module): #Batch-First Positional Encoding
 class Transformer(nn.Module):
     def __init__(self, args, input_size, output_size):
         super().__init__()
-        self.pos_encoder = PositionalEncoding(input_size, args.drop_p)
+        self.pos_encoder = PositionalEncoding(input_size, args.drop_p) # PostionalEmbedding was not used because some of test set data lengh is longer than train set
         encoder_layer = nn.TransformerEncoderLayer(d_model=input_size, nhead=args.nhead, dim_feedforward=args.dim_ff, dropout=args.drop_p, batch_first=True)
         self.model = nn.TransformerEncoder(encoder_layer=encoder_layer, num_layers=args.n_layers)
         self.output_layer = nn.Linear(input_size, output_size)
@@ -31,7 +31,5 @@ class Transformer(nn.Module):
     def forward(self, audio):
         x = self.pos_encoder(audio)
         x = self.model(x)
-        out = self.output_layer(x[:, 0, :])
+        out = self.output_layer(x[:, 0, :]) #Similar to Bert(CLS), 1th time step output will be used for classification
         return out
-
-#Bert와 유사한 구조를 사용하지만, Positional Encoding을 사용

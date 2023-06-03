@@ -1,11 +1,10 @@
-월간 데이콘 음성 감정 인식 AI 경진대회
+Dacon Voice Emotion Recognition AI Competition
 
-[English](README_EN.md)
+[Korean](README.md)
 
-제가 사용한 모델 및 args입니다.
+The model and args that I used
 
-Batch size가 없는 모델의 경우, 내부적으로 auto_batch_size.py를 통해 내부적으로 batch size를 결정했습니다.
-
+For script wit out batch size argument, the batch size will be fixed by auto_batch_size.py befor the training session starts
 ```
 python main.py --model RNN --batch_size 1024
 python main.py --model LSTM --batch_size 1024
@@ -22,7 +21,7 @@ python main.py --model HuggingFace --pretrained_model "facebook/data2vec-audio-l
 python main.py --model HuggingFace --pretrained_model "asapp/sew-mid-100k" --lr 1e-5 --patience 10 --num_workers 4 --batch_size 16
 ```
 
-아래는 중간에 학습이 끊겼을 경우 사용한 명령어 예시입니다.
+scipt when the model stopped unexpectedly
 ```
 python main.py --model HuggingFace --pretrained_model "microsoft/wavlm-large" --lr 1e-5 --patience 10 --num_workers 4 --batch_size 6 --continue_train 5 --continue_from_folder result/HuggingFace_2_needed
 ```
