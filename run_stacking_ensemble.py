@@ -11,7 +11,8 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--name", default= None)
 
 parser.add_argument("--train_csv", required=True)
-parser.add_argument("--test_csv", required=True)
+parser.add_argument("--stacking_input", required=True)
+parser.add_argument("--test_stacking_input", required=True)
 parser.add_argument("--submission", required=True)
 
 parser.add_argument("--target_col", required=True)
@@ -23,14 +24,15 @@ parser.add_argument("--eval_metric", default='acc')
 args = parser.parse_args()
 
 train_data = pd.read_csv(args.train_csv) #Stacking Input File
-test_data = pd.read_csv(args.test_csv) #Test File
+stacking_input = pd.read_csv(args.stacking_input)
+test_staking_input = pd.read_csv(args.test_stacking_input) #Test File
 
 if args.drop is not None:
-    train_x = train_data.drop(columns=args.drop + [args.target_col], axis = 1)
-    test_x = test_data.drop(columns=args.drop, axis = 1)
+    train_x = stacking_input.drop(columns=args.drop + [args.target_col], axis = 1)
+    test_x = test_staking_input.drop(columns=args.drop, axis = 1)
 else:
-    train_x = train_data.drop(columns=[args.target_col], axis = 1)
-    test_x = test_data
+    train_x = stacking_input
+    test_x = test_staking_input
     
 train_y = train_data[args.target_col]
 
