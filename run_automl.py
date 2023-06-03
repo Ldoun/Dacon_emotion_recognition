@@ -47,7 +47,7 @@ test_mfcc_df = pd.DataFrame(test_features, columns=['mfcc_'+str(x) for x in rang
   
 train_y = train_data[args.target_col]
 
-result_path = os.path.join(args.result_path, args.name)
+result_path = os.path.join(args.result_path, 'AutoML_'+args.name)
 automl = AutoML(mode="Compete", eval_metric=args.eval_metric, total_time_limit = 60 * 60 * 5, random_state=args.seed, results_path=result_path)
 automl.fit(train_mfcc_df, train_y)
 
