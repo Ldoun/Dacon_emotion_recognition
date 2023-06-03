@@ -47,10 +47,11 @@ test_mfcc_df = pd.DataFrame(test_features, columns=['mfcc_'+str(x) for x in rang
   
 train_y = train_data[args.target_col]
 
-automl = AutoML(mode="Compete", eval_metric=args.eval_metric, total_time_limit = 60 * 60 * 5, random_state=args.seed, results_path=args.name)
+result_path = os.path.join(args.result_path, args.name)
+automl = AutoML(mode="Compete", eval_metric=args.eval_metric, total_time_limit = 60 * 60 * 5, random_state=args.seed, results_path=result_path)
 automl.fit(train_mfcc_df, train_y)
 
 pred = automl.predict(test_mfcc_df)
 submission = pd.read_csv(args.submission)
 submission[args.target_col] = pred
-submission.to_csv(f"{args.result_path}/{args.name}_submission.csv", index=False)
+submission.to_csv(os.path.join(result_path, "automl_submission.csv"), index=False)
