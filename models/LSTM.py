@@ -13,11 +13,11 @@ class LSTM(nn.Module):
         self.linear = nn.Linear(2*args.hidden, output_size)
 
     def forward(self, audio):
-        output, _  = self.model(audio)#(bs, s, 2*hidden)
+        output, _  = self.model(audio)#(bs, timestep, 2*hidden)
         forward_o = output[:, -1, :self.hidden_size] #hidden state of last output of forward step
         backward_o = output[:, 0, self.hidden_size:] #hidden state of last output of backward step
         
-        out = torch.cat([forward_o, backward_o], dim=1)
+        out = torch.cat([forward_o, backward_o], dim=1) #concat outputs of forward step and backward step
         return self.linear(out)
         
 class RNN(nn.Module):
@@ -31,9 +31,9 @@ class RNN(nn.Module):
         self.linear = nn.Linear(2*args.hidden, output_size)
 
     def forward(self, audio):
-        output, _  = self.model(audio)#(bs, s, 2*hidden)
+        output, _  = self.model(audio)#(bs, timestep, 2*hidden)
         forward_o = output[:, -1, :self.hidden_size] #hidden state of last output of forward step
         backward_o = output[:, 0, self.hidden_size:] #hidden state of last output of backward step
         
-        out = torch.cat([forward_o, backward_o], dim=1)
+        out = torch.cat([forward_o, backward_o], dim=1) #concat outputs of forward step and backward step
         return self.linear(out)

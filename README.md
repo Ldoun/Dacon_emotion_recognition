@@ -26,3 +26,9 @@ python main.py --model HuggingFace --pretrained_model "asapp/sew-mid-100k" --lr 
 ```
 python main.py --model HuggingFace --pretrained_model "microsoft/wavlm-large" --lr 1e-5 --patience 10 --num_workers 4 --batch_size 6 --continue_train 5 --continue_from_folder result/HuggingFace_2_needed
 ```
+
+Staking Ensemble using AutoML
+```
+python make_input_for_stacking.py
+python run_stacking_ensemble.py --name stacking_input_with_mfcc --train_csv ../data/train.csv --stacking_input ./result/train_stacking_with_mfcc.csv --test_stacking_input ./result/test_stacking_with_mfcc.csv --submission ../data/sample_submission.csv --target_col label
+```
