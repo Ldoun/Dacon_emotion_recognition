@@ -28,6 +28,6 @@ python main.py --model HuggingFace --pretrained_model "microsoft/wavlm-large" --
 
 Staking Ensemble using AutoML(Applied Stacking Ensemble to HuggingFace model only)
 ```
-python make_input_for_stacking.py
+python make_input_for_stacking.py --n_mfcc 32
 python run_stacking_ensemble.py --name stacking_input_with_mfcc --train_csv ../data/train.csv --stacking_input ./result/train_stacking_with_mfcc.csv --test_stacking_input ./result/test_stacking_with_mfcc.csv --submission ../data/sample_submission.csv --target_col label
 ```
