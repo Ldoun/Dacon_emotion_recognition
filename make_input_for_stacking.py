@@ -21,6 +21,7 @@ for train_file, test_file, model in zip(train_files, test_files, model_list):
     train_df_list.append(train_df)
 
     test_df = pd.read_csv(test_file)
+    test_df = test_df[[str(i) for i in range(6)]]
     test_df = test_df.rename(columns={str(i):model+str(i) for i in range(6)})
     test_df = test_df.applymap(lambda x: x/10) #because of 10 fold cross validation
     test_df_list.append(test_df)
