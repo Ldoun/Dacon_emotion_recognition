@@ -7,9 +7,6 @@
 Batch size가 없는 모델의 경우, 내부적으로 auto_batch_size.py를 통해 내부적으로 batch size를 결정했습니다.
 
 ```
-python main.py --model RNN --batch_size 1024
-python main.py --model LSTM --batch_size 1024
-python main.py --model Transformer --batch_size 512 --lr 1e-4
 python main.py --model HuggingFace --pretrained_model "MIT/ast-finetuned-audioset-10-10-0.4593" --batch_size 16 --lr 1e-5 --patience 10
 python main.py --model HuggingFace --pretrained_model "facebook/wav2vec2-base" --batch_size 16 --lr 1e-5 --patience 10
 python main.py --model HuggingFace --pretrained_model "facebook/wav2vec2-conformer-rope-large-960h-ft" --lr 1e-5 --patience 10
