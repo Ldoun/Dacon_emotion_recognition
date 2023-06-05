@@ -38,7 +38,7 @@ class AudioDataSet(Dataset):
         if y is not None:
             self.y = torch.tensor(y.values, dtype=torch.long)
         else:
-            self.y = torch.zeros(len(self.features))
+            self.y = torch.zeros(len(self.features)) #dummy y for Compatibility
 
         self.scaler = None
 

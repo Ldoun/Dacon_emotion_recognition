@@ -60,14 +60,14 @@ if __name__ == "__main__":
     skf = StratifiedKFold(n_splits=args.cv_k, random_state=args.seed, shuffle=True) #Using StratifiedKFold for cross-validation
     prediction = pd.read_csv(args.submission)
     output_index = [f'{i}' for i in range(0, output_size)]
-    stackking_input = pd.DataFrame(columns = output_index, index=range(len(train_data))) #dataframe for validation prediction
+    stackking_input = pd.DataFrame(columns = output_index, index=range(len(train_data))) #dataframe for saving OOF predictions
 
     if args.continue_train > 0:
         prediction = pd.read_csv(os.path.join(result_path, 'sum.csv'))
         test_result = prediction[output_index].values
         stackking_input = pd.read_csv(os.path.join(result_path, f'for_stacking_input.csv'))
     
-    for fold, (train_index, valid_index) in enumerate(skf.split(train_data['path'], train_data['label'])): #every fold will have similar label distribution
+    for fold, (train_index, valid_index) in enumerate(skf.split(train_data['path'], train_data['label'])): #by skf every fold will have similar label distribution
         if args.continue_train > fold+1:
             logger.info(f'skipping {fold+1}-fold')
             continue
@@ -77,7 +77,7 @@ if __name__ == "__main__":
         fold_logger.handlers.clear()
         fold_logger.addHandler(logging.FileHandler(os.path.join(fold_result_path, 'log.log')))    
         fold_logger.info(f'start training of {fold+1}-fold')
-        #logger to log current fold output
+        #logger to log current n-fold output
 
         kfold_train_data = train_data.iloc[train_index]
         kfold_valid_data = train_data.iloc[valid_index]
@@ -113,12 +113,12 @@ if __name__ == "__main__":
         test_loader = DataLoader(
             test_dataset, batch_size=args.batch_size, shuffle=False, num_workers=args.num_workers, collate_fn=collate_fn
         ) #make test data loader
-        test_result += trainer.test(test_loader) #softmax applied output; accumulate output test prediction of current fold model
+        test_result += trainer.test(test_loader) #softmax applied output; accumulate test prediction of current fold model
         prediction[output_index] = test_result
         prediction.to_csv(os.path.join(result_path, 'sum.csv'), index=False) 
         
-        stackking_input.loc[valid_index, output_index] = trainer.test(valid_loader) #use the validation data(data that wasn't seen in training) to make input for Stacking Ensemble model
+        stackking_input.loc[valid_index, output_index] = trainer.test(valid_loader) #use the validation data(hold out dataset) to make input for Stacking Ensemble model(out of fold prediction)
         stackking_input.to_csv(os.path.join(result_path, f'for_stacking_input.csv'), index=False)
 
-prediction['label'] = np.argmax(test_result, axis=-1) #use the most likely results as final prediction
+prediction['label'] = np.argmax(test_result, axis=-1) #use the most likely results as my final prediction
 prediction.drop(columns=output_index).to_csv(os.path.join(result_path, 'prediction.csv'), index=False)

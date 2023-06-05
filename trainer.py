@@ -43,7 +43,7 @@ class Trainer():
 
         total_loss = 0
         correct = 0
-        for batch in tqdm(self.train_loader, file=sys.stdout): #tqdm output will not be written to logger file(will only write stdout)
+        for batch in tqdm(self.train_loader, file=sys.stdout): #tqdm output will not be written to logger file(will only written to stdout)
             x,y = batch
             x, y = x.to(self.device), y.to(self.device)
             
@@ -53,7 +53,7 @@ class Trainer():
             loss = self.loss_fn(output, y)
             loss.backward()
             self.optimizer.step()
-            total_loss += loss.item() * x.shape[0] #because reduction of criterion -> mean
+            total_loss += loss.item() * x.shape[0] #because reduction of criterion -> mean, increase the loss to macth the data size
             correct += sum(output.argmax(dim=1) == y).item()
         
         return total_loss/self.len_train, correct/self.len_train
@@ -69,7 +69,7 @@ class Trainer():
                 output = self.model(x)
                 
                 loss = self.loss_fn(output, y)
-                total_loss += loss.item() * x.shape[0] #because reduction of criterion -> mean
+                total_loss += loss.item() * x.shape[0] #because reduction of criterion -> mean, increase the loss to macth the data size
                 correct += sum(output.argmax(dim=1) == y).item()
                 
         return total_loss/self.len_valid, correct/self.len_valid

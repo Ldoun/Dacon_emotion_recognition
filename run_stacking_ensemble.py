@@ -23,9 +23,9 @@ parser.add_argument("--eval_metric", default='accuracy')
 
 args = parser.parse_args()
 
-train_data = pd.read_csv(args.train_csv) #Stacking Input File
+train_data = pd.read_csv(args.train_csv) #OOF Predictions of models
 stacking_input = pd.read_csv(args.stacking_input)
-test_staking_input = pd.read_csv(args.test_stacking_input) #Test File
+test_staking_input = pd.read_csv(args.test_stacking_input) #Test Set Predictions of models
 
 if args.drop is not None:
     train_x = stacking_input.drop(columns=args.drop + [args.target_col], axis = 1)
@@ -38,9 +38,9 @@ train_y = train_data[args.target_col]
 
 automl = AutoML(mode="Compete", eval_metric=args.eval_metric, total_time_limit = 60 * 60 * 5, random_state=args.seed, results_path=os.path.join('result', args.name))
 automl.fit(train_x, train_y)
-#Use the AutoML to get maximum performance given output prediction of Models
+#Use the AutoML to get maximum performance given OOF predictions of Models
 
-pred = automl.predict(test_x)
+pred = automl.predict(test_x) #predict using Test data
 submission = pd.read_csv(args.submission)
 submission[args.target_col] = pred
 submission.to_csv(f"{automl.results_path}_submission.csv", index=False)

@@ -1,5 +1,5 @@
 #Example Usecase: source aggregate.sh {model_name}_{number} {patience}
-
+#For calculating Average loss and Average acc of validation prediction
 total_loss=0
 total_acc=0
 

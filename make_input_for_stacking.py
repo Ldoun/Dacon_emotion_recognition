@@ -21,7 +21,7 @@ for train_file, test_file, model in zip(train_files, test_files, model_list):
     train_df_list.append(train_df)
 
     test_df = pd.read_csv(test_file)
-    test_df = test_df[[str(i) for i in range(6)]]
+    test_df = test_df[[str(i) for i in range(6)]] #drop id and path to file
     test_df = test_df.rename(columns={str(i):model+str(i) for i in range(6)})
     test_df = test_df.applymap(lambda x: x/10) #because of 10 fold cross validation
     test_df_list.append(test_df)
@@ -32,11 +32,11 @@ test_stacking = pd.concat(test_df_list, axis=1)
 test_stacking.to_csv('result/test_stacking_input.csv', index=False)
 
 parser = argparse.ArgumentParser()
-args_for_audio(parser)
-args_for_data(parser)
+args_for_audio(parser) #reuse the argument made by config.py
+args_for_data(parser) #reuse the argument made by config.py
 args = parser.parse_args()
 
-mfcc_func = partial(load_audio_mfcc, 
+mfcc_func = partial(load_audio_mfcc,
             sr=16000, n_fft=args.n_fft, win_length=args.win_length, hop_length=args.hop_length, n_mels=args.n_mels, n_mfcc=args.n_mfcc)
 process_func = lambda x: np.mean(mfcc_func(x).T, axis=1)
 
@@ -48,7 +48,7 @@ test_data['path'] = test_data['path'].apply(lambda x: os.path.join(args.path, x)
 train_features = [process_func(file) for file in train_data['path']]
 test_features = [process_func(file) for file in test_data['path']]
 
-min_max_scaler = MinMaxScaler().fit(train_features)
+min_max_scaler = MinMaxScaler().fit(train_features) #use min-max scaler to scale MFCC features to a range of 0~1
 train_features = min_max_scaler.transform(train_features)
 test_features = min_max_scaler.transform(test_features)
 
