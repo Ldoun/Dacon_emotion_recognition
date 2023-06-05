@@ -24,7 +24,7 @@ python main.py --model HuggingFace --pretrained_model "asapp/sew-mid-100k" --lr 
 
 아래는 중간에 학습이 끊겼을 경우 사용한 명령어 예시입니다.
 ```
-python main.py --model HuggingFace --pretrained_model "microsoft/wavlm-large" --lr 1e-5 --patience 10 --num_workers 4 --batch_size 6 --continue_train 5 --continue_from_folder result/HuggingFace_2_needed
+python main.py --model HuggingFace --pretrained_model "microsoft/wavlm-large" --lr 1e-5 --patience 10 --num_workers 4 --batch_size 6 --continue_train 5 --continue_from_folder result/HuggingFace_2
 ```
 
 Staking Ensemble using AutoML(HuggingFace finetune 진행한 모델에 대해서만 Stacking 앙상블을 수행했습니다)
